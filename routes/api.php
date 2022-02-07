@@ -21,11 +21,12 @@ use Illuminate\Support\Facades\Route;
 // });
 Route::prefix('user')->group(function () {
     Route::post('/', [UserController::class,'store'])->name('user.store'); 
-    Route::get('/{user}', [UserController::class,'show'])->name('user.show');   
-    Route::put('/{user}', [UserController::class,'update'])->name('user.update');
-    Route::delete('/{user}', [UserController::class,'delete'])->name('user.delete');   
+    Route::get('/login', [UserController::class,'login'])->name('user.login'); 
+    Route::get('/{user}', [UserController::class,'show'])->name('user.show')->middleware('auth:sanctum');   
+    Route::put('/{user}', [UserController::class,'update'])->name('user.update')->middleware('auth:sanctum');
+    Route::delete('/{user}', [UserController::class,'delete'])->name('user.delete')->middleware('auth:sanctum');   
 
-    Route::post('/save-movies/{user}', [UserController::class,'saveMovies'])->name('user.saveMovies'); 
+    Route::post('/save-movies', [UserController::class,'saveMovies'])->name('user.saveMovies')->middleware('auth:sanctum'); 
 });
 
 Route::prefix('movie')->group(function () {

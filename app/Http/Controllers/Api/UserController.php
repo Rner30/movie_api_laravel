@@ -12,6 +12,26 @@ use Illuminate\Support\Str;
 
 class UserController extends Controller
 { 
+    public function login(Request $request)
+    {
+        $request->validate([
+            'email' => 'required|email|exists:users',
+            'password' => 'required|min:5'
+        ]);
+
+        $user = User::query()->with('movies')->where('email','=',$request->email)->first();
+
+        $passwordVerify = Hash::check($request->password,$user->password);
+
+        if (!$passwordVerify) {
+            return response()->json(['msg'=> 'Password incorrecta']);
+        }
+
+        $token = $user->createToken('auth_token')->plainTextToken;
+
+        return response()->json(['Token' => $token,'User'=>$user]);
+    }
+
     public function store(Request $request)
     {
         $request->validate([
@@ -27,18 +47,25 @@ class UserController extends Controller
         $newUser->password = Hash::make($request->password);
 
         $newUser->save();
-        return response()->json($newUser,201);
+        $token = $newUser->createToken('auth_token')->plainTextToken;
+
+        return response()->json([
+            'data' => $newUser,
+            'token' =>$token
+        ],201);
     }
 
     public function show($userId)
     {
-        $userExists = User::query()->with('movies')->find($userId);
-
-        if (!isset($userExists)) {
+        $userToken = auth()->user();
+        
+        if ($userId != $userToken->id) {
             return response()->json([
                 'msg' => "Usuario no encontrado"
             ],404);
         }
+
+        $userExists = User::query()->with('movies')->find($userId);
 
         return UserResource::make($userExists);
     }
@@ -46,12 +73,14 @@ class UserController extends Controller
    
     public function update(Request $request, $userId)
     {
-        $findUser = User::query()->find($userId);
-        if (!isset($findUser)) {
+        $token = auth()->user();
+        
+        if ($userId != $token) {
             return response()->json([
-                'msg' => 'Usuario no existente con ese id'
+                'msg' => 'Usuario no existente con ese id o token'
             ],404);
         }
+        $findUser = User::query()->find($userId);
         $findUser->update($request->all());
         return UserResource::make($findUser);
     }
@@ -63,24 +92,26 @@ class UserController extends Controller
     }
 
     // /api/user/save-movies/{userId}
-    public function saveMovies(Request $request ,$userId)
+    public function saveMovies(Request $request)
     {
-        $userExists = User::query()->with('movies')->find($userId)->first();
+        $token = auth()->user();
+
+        $user = User::query()->with('movies')->find($token->id)->first();
 
         $movie = Movie::query()->find($request->movie);
         
-        if (!isset($userExists) || !isset($movie)) {
+        if (!isset($user) || !isset($movie)) {
             return response()->json([
                 'msg' => 'No existe usuario O pelicula con ese ID'
             ],404);
         }
 
-        if ($userExists->movies->contains($movie)) {
-            $userExists->movies()->detach($movie);
+        if ($user->movies->contains($movie)) {
+            $user->movies()->detach($movie);
             return response()->json(["msg"=> "La pelicula fue quitada"],200);
         }
     
-        $userExists->movies()->attach($movie);
+        $user->movies()->attach($movie);
         
         return response()->json(["msg"=>"Pelicula agregada al usuario"],200);
     }
