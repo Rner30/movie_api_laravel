@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
+use App\Http\Resources\UserResource;
 use App\Models\Movie;
 use App\Models\User;
 use Illuminate\Http\Request;
@@ -26,7 +27,7 @@ class UserController extends Controller
         $newUser->password = Hash::make($request->password);
 
         $newUser->save();
-        return response()->json($newUser,200);
+        return response()->json($newUser,201);
     }
 
     public function show($userId)
@@ -39,9 +40,7 @@ class UserController extends Controller
             ],404);
         }
 
-        return response()->json([
-            $userExists
-        ],200);
+        return UserResource::make($userExists);
     }
 
    
@@ -51,10 +50,10 @@ class UserController extends Controller
         if (!isset($findUser)) {
             return response()->json([
                 'msg' => 'Usuario no existente con ese id'
-            ]);
+            ],404);
         }
         $findUser->update($request->all());
-        return response()->json($findUser,200);
+        return UserResource::make($findUser);
     }
 
    
@@ -73,16 +72,16 @@ class UserController extends Controller
         if (!isset($userExists) || !isset($movie)) {
             return response()->json([
                 'msg' => 'No existe usuario O pelicula con ese ID'
-            ]);
+            ],404);
         }
 
         if ($userExists->movies->contains($movie)) {
             $userExists->movies()->detach($movie);
-            return response()->json(["msg"=> "La pelicula fue quitada"]);
+            return response()->json(["msg"=> "La pelicula fue quitada"],200);
         }
     
         $userExists->movies()->attach($movie);
         
-        return response()->json(["msg"=>"Pelicula agregada al usuario"]);
+        return response()->json(["msg"=>"Pelicula agregada al usuario"],200);
     }
 }

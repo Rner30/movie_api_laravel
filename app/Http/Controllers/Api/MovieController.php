@@ -14,9 +14,6 @@ class MovieController extends Controller
     {
         $allMovies = Movie::all();
 
-        // return response()->json([
-        //     $allMovies
-        // ],200);
         return MovieResource::collection($allMovies);
     }
     
@@ -35,18 +32,18 @@ class MovieController extends Controller
         $newMovie->image = $request->image;
 
         $newMovie->save();
-        return response()->json($newMovie,200);
+        return response()->json($newMovie,201);
     }
 
     public function show($movie)
     {
-        $search_movie = Movie::query()->find($movie)->first();
+        $search_movie = Movie::query()->find($movie);
         
         if (!isset($search_movie)) {
-            return response()->json(["msg"=>"La pelicula no existe"]);
+            return response()->json(["msg"=>"La pelicula no existe"],404);
         }
 
-        return $search_movie;
+        return MovieResource::make($search_movie);
     }
 
     
@@ -56,13 +53,14 @@ class MovieController extends Controller
         if (!isset($findMovie)) {
             return response()->json([
                 'msg' => 'Pelicula no existente con ese id'
-            ]);
+            ],404);
         }
 
         $findMovie->update($request->all());
+
         return response()->json([
-            "msg" => "Pelicula actualizada"
-        ]);
+            "msg" => $findMovie->title ." Pelicula actualizada"
+        ],200);
     }
 
     public function destroy($movie)
@@ -70,10 +68,10 @@ class MovieController extends Controller
         $deleteMovie = Movie::query()->find($movie);
         
         if (!isset($deleteMovie)) {
-            return response()->json(['msg'=>'La pelicula no existe']);
+            return response()->json(['msg'=>'La pelicula no existe'],404);
         }
 
         $deleteMovie->delete();
-        return response()->json($deleteMovie,200);
+        return MovieResource::make($deleteMovie);
     }
 }
