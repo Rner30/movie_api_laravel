@@ -22,7 +22,7 @@ use Illuminate\Support\Facades\Route;
 Route::prefix('user')->group(function () {
     Route::post('/', [UserController::class,'store'])->name('user.store'); 
     Route::get('/login', [UserController::class,'login'])->name('user.login'); 
-    Route::get('/{user}', [UserController::class,'show'])->name('user.show')->middleware('auth:sanctum');   
+    Route::get('/{user}', [UserController::class,'show'])->name('user.show');
     Route::put('/{user}', [UserController::class,'update'])->name('user.update')->middleware('auth:sanctum');
     Route::delete('/{user}', [UserController::class,'delete'])->name('user.delete')->middleware('auth:sanctum');   
 

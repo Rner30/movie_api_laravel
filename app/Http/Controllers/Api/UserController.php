@@ -57,15 +57,13 @@ class UserController extends Controller
 
     public function show($userId)
     {
-        $userToken = auth()->user();
-        
-        if ($userId != $userToken->id) {
+        $userExists = User::query()->with('movies')->find($userId);
+          
+        if (!isset($userExists)) {
             return response()->json([
                 'msg' => "Usuario no encontrado"
             ],404);
         }
-
-        $userExists = User::query()->with('movies')->find($userId);
 
         return UserResource::make($userExists);
     }
