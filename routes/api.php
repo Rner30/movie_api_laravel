@@ -24,15 +24,14 @@ Route::prefix('user')->group(function () {
     Route::get('/login', [UserController::class,'login'])->name('user.login'); 
     Route::get('/{user}', [UserController::class,'show'])->name('user.show');
     Route::put('/{user}', [UserController::class,'update'])->name('user.update')->middleware('auth:sanctum');
-    Route::delete('/{user}', [UserController::class,'delete'])->name('user.delete')->middleware('auth:sanctum');   
-
+    Route::delete('/{user}', [UserController::class,'destroy'])->name('user.destroy');   
     Route::post('/save-movies', [UserController::class,'saveMovies'])->name('user.saveMovies')->middleware('auth:sanctum'); 
 });
 
 Route::prefix('movie')->group(function () {
-    Route::get('/',[MovieController::class,'index']);
-    Route::post('/',[MovieController::class,'store']);
-    Route::get('/{movieId}',[MovieController::class,'show']);
-    Route::put('/{movieId}',[MovieController::class,'update']);
-    Route::delete('/{movieId}',[MovieController::class,'destroy']);
+    Route::get('/',[MovieController::class,'index'])->middleware('auth:sanctum');
+    Route::post('/',[MovieController::class,'store'])->middleware(['auth:sanctum','auth.admin']);
+    Route::get('/{movieId}',[MovieController::class,'show'])->middleware('auth:sanctum');
+    Route::put('/{movieId}',[MovieController::class,'update'])->middleware(['auth:sanctum','auth.admin']);
+    Route::delete('/{movieId}',[MovieController::class,'destroy'])->middleware(['auth:sanctum','auth.admin']);
 });

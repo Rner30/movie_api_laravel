@@ -37,7 +37,8 @@ class UserController extends Controller
         $request->validate([
             'name' => 'required',
             'email' => 'required|email|unique:users',
-            'password' => 'required|min:5'
+            'password' => 'required|min:5',
+            'is_admin' => 'boolean'
         ]);
 
         $newUser = new User();
@@ -45,6 +46,7 @@ class UserController extends Controller
         $newUser->name = $request->name;
         $newUser->email = $request->email;
         $newUser->password = Hash::make($request->password);
+        $newUser->is_admin = $request->is_admin ? : 0;
 
         $newUser->save();
         $token = $newUser->createToken('auth_token')->plainTextToken;
@@ -86,7 +88,15 @@ class UserController extends Controller
    
     public function destroy($id)
     {
-        //
+        $user = User::destroy($id);
+        if (!isset($user)) {
+            return response()->json([
+                'msg' => 'No existe un usuario con ese id'
+            ]);
+        }
+        return response()->json([
+            'msg' => 'Usuario eliminado'
+        ]);
     }
 
     // /api/user/save-movies/{userId}
