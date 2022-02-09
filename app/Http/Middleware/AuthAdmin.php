@@ -16,7 +16,7 @@ class AuthAdmin
      */
     public function handle(Request $request, Closure $next)
     {
-        if (auth()->user()->is_admin === 1) {
+        if (auth()->user()->is_admin) {
             return $next($request);
         }
         return response()->json([

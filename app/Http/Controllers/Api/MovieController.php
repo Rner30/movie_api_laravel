@@ -20,7 +20,7 @@ class MovieController extends Controller
     public function store(Request $request)
     {
         $request->validate([
-            'title' => 'required',
+            'title' => 'required|unique:movies',
             'description' => 'required'
         ]);
 
