@@ -1,19 +1,12 @@
 <?php
 
-use Faker\Core\Uuid;
 use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
-use Illuminate\Support\Str;
-use Ramsey\Uuid\Rfc4122\UuidV4;
 
 class CreateMoviesTable extends Migration
 {
-    /**
-     * Run the migrations.
-     *
-     * @return void
-     */
+
     public function up()
     {
         Schema::create('movies', function (Blueprint $table) {
@@ -26,11 +19,6 @@ class CreateMoviesTable extends Migration
         });
     }
 
-    /**
-     * Reverse the migrations.
-     *
-     * @return void
-     */
     public function down()
     {
         Schema::dropIfExists('movies');
