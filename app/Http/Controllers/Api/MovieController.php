@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
+use App\Http\Requests\StoreMovieRequest;
 use App\Http\Resources\MovieResource;
 use App\Models\Movie;
 use Illuminate\Http\Request;
@@ -17,13 +18,8 @@ class MovieController extends Controller
         return MovieResource::collection($allMovies);
     }
     
-    public function store(Request $request)
+    public function store(StoreMovieRequest $request)
     {
-        $request->validate([
-            'title' => 'required|unique:movies',
-            'description' => 'required'
-        ]);
-
         $newMovie = new Movie();
         $newMovie->id = Str::uuid();
         $newMovie->title = $request->title;
@@ -50,6 +46,7 @@ class MovieController extends Controller
     public function update(Request $request, $movie)
     {
         $findMovie = Movie::query()->find($movie);
+
         if (!isset($findMovie)) {
             return response()->json([
                 'msg' => 'Pelicula no existente con ese id'

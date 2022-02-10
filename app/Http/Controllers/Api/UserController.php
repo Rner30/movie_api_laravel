@@ -3,6 +3,8 @@
 namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
+use App\Http\Requests\LoginUserRequest;
+use App\Http\Requests\StoreUserRequest;
 use App\Http\Resources\UserResource;
 use App\Models\Movie;
 use App\Models\User;
@@ -12,13 +14,8 @@ use Illuminate\Support\Str;
 
 class UserController extends Controller
 { 
-    public function login(Request $request)
+    public function login(LoginUserRequest $request)
     {
-        $request->validate([
-            'email' => 'required|email|exists:users',
-            'password' => 'required|min:5'
-        ]);
-
         $user = User::query()->with('movies')->where('email','=',$request->email)->first();
 
         $passwordVerify = Hash::check($request->password,$user->password);
@@ -32,15 +29,8 @@ class UserController extends Controller
         return response()->json(['Token' => $token,'User'=>$user]);
     }
 
-    public function store(Request $request)
+    public function store(StoreUserRequest $request)
     {
-        $request->validate([
-            'name' => 'required',
-            'email' => 'required|email|unique:users',
-            'password' => 'required|min:5',
-            'is_admin' => 'boolean'
-        ]);
-
         $newUser = new User();
         $newUser->id = Str::uuid();
         $newUser->name = $request->name;
