@@ -9,7 +9,7 @@ use Illuminate\Support\Facades\Route;
 // });
 Route::prefix('user')->group(function () {
     Route::post('/', [UserController::class,'store'])->name('user.store'); 
-    Route::get('/login', [UserController::class,'login'])->name('user.login'); 
+    Route::post('/login', [UserController::class,'login'])->name('user.login'); 
     Route::get('/{user}', [UserController::class,'show'])->name('user.show');
     Route::delete('/{user}', [UserController::class,'destroy'])->name('user.destroy');   
     

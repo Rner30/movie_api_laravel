@@ -26,7 +26,7 @@ class UserController extends Controller
 
         $token = $user->createToken('auth_token')->plainTextToken;
 
-        return response()->json(['Token' => $token,'User'=>$user]);
+        return response()->json(['Token' => $token,'User'=>$user],200);
     }
 
     public function store(StoreUserRequest $request)
