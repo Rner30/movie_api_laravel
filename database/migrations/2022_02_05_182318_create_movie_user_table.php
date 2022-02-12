@@ -17,6 +17,7 @@ class CreateMovieUserTable extends Migration
             $table->id();
             $table->foreignUuid('movie_id')->references('id')->on('movies')->onDelete('cascade');
             $table->foreignUuid('user_id')->references('id')->on('users')->onDelete('cascade');
+            $table->bigInteger('seconds');
             $table->timestamps();
         });
     }

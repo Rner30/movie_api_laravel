@@ -109,7 +109,7 @@ class UserController extends Controller
             return response()->json(["msg"=> "La pelicula fue quitada"],200);
         }
     
-        $user->movies()->attach($movie);
+        $user->movies()->attach($movie,['seconds' => $request->seconds ]);
         
         return response()->json(["msg"=>"Pelicula agregada al usuario"],200);
     }
