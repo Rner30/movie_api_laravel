@@ -67,9 +67,10 @@ class UserController extends Controller
         
         if ($userId != $token) {
             return response()->json([
-                'msg' => 'Usuario no existente con ese id o token'
+                'msg' => 'Solo puedes modificar usuarios teniendo su autenticacion'
             ],404);
         }
+
         $findUser = User::query()->find($userId);
         $findUser->update($request->all());
         return UserResource::make($findUser);
@@ -110,6 +111,7 @@ class UserController extends Controller
         }
     
         $user->movies()->attach($movie,['seconds' => $request->seconds ]);
+        
         
         return response()->json(["msg"=>"Pelicula agregada al usuario"],200);
     }
