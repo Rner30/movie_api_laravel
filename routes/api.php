@@ -3,19 +3,24 @@
 use App\Http\Controllers\Api\MovieController;
 use App\Http\Controllers\Api\PaymentController;
 use App\Http\Controllers\Api\UserController;
+use App\Http\Controllers\User\UserDestroyController;
 use App\Http\Controllers\User\UserLoginController;
+use App\Http\Controllers\User\UserSaveMoviesController;
+use App\Http\Controllers\User\UserShowController;
+use App\Http\Controllers\User\UserStoreController;
+use App\Http\Controllers\User\UserUpdateController;
 use Illuminate\Support\Facades\Route;
 
 
 Route::prefix('user')->group(function () {
-    Route::post('/', [UserController::class,'store'])->name('user.store'); 
+    Route::post('/', UserStoreController::class)->name('user.store'); 
     Route::post('/login', UserLoginController::class)->name('user.login'); 
-    Route::get('/{user}', [UserController::class,'show'])->name('user.show');
-    Route::delete('/{user}', [UserController::class,'destroy'])->name('user.destroy');   
+    Route::get('/{user}', UserShowController::class)->name('user.show');
+    Route::delete('/{user}', UserDestroyController::class)->name('user.destroy');   
     
     Route::middleware('auth:sanctum')->group(function () {
-        Route::post('/save-movies', [UserController::class,'saveMovies'])->name('user.saveMovies'); 
-        Route::put('/{user}', [UserController::class,'update'])->name('user.update');
+        Route::post('/save-movies', UserSaveMoviesController::class)->name('user.saveMovies'); 
+        Route::put('/{user}', UserUpdateController::class)->name('user.update');
     });
 });
 
