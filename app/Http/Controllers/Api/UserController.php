@@ -14,39 +14,6 @@ use Illuminate\Support\Str;
 
 class UserController extends Controller
 { 
-    public function login(LoginUserRequest $request)
-    {
-        $user = User::query()->with('movies')->where('email','=',$request->email)->first();
-
-        $passwordVerify = Hash::check($request->password,$user->password);
-
-        if (!$passwordVerify) {
-            return response()->json(['msg'=> 'Password incorrecta']);
-        }
-
-        $token = $user->createToken('auth_token')->plainTextToken;
-
-        return response()->json(['Token' => $token,'User'=>$user],200);
-    }
-
-    public function store(StoreUserRequest $request)
-    {
-        $newUser = new User();
-        $newUser->id = Str::uuid();
-        $newUser->name = $request->name;
-        $newUser->email = $request->email;
-        $newUser->password = Hash::make($request->password);
-        $newUser->is_admin = $request->is_admin ? : 0;
-
-        $newUser->save();
-        $token = $newUser->createToken('auth_token')->plainTextToken;
-
-        return response()->json([
-            'data' => $newUser,
-            'token' =>$token
-        ],201);
-    }
-
     public function show($userId)
     {
         $userExists = User::query()->with('movies')->find($userId);

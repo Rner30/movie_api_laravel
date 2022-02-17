@@ -6,7 +6,6 @@ use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Http;
 use MercadoPago;
-use MercadoPago\MerchantOrder;
 
 class PaymentController extends Controller
 {
@@ -21,8 +20,9 @@ class PaymentController extends Controller
     {
         // $user = auth()->user();
 
-        $name = 'pepe';
-        $email = 'pepe@pepe.com';
+        // $name = $user->name;
+        // $email = $user->email;
+
 
         // Crea un objeto de preferencia
         $preference = new MercadoPago\Preference();
@@ -32,40 +32,38 @@ class PaymentController extends Controller
         $item->title = 'Mi producto';
         $item->quantity = 1;
         $item->unit_price = 75.56;
-        $preference->items = array($item);
+
+        $preference->items = array($item);  
        
-
-        // $preference = new MercadoPago\Preference();
-
-        // $item = new MercadoPago\Item();
-
-        // $item->title = 'TITANIC LIMIT EDITION';
-        // $item->quantity = 1;
-        // $item->unit_price = 75.56;
-        // $preference->items = array($item);
-        // $preference->save();
-
-
         $payer = new MercadoPago\Payer();  
         $payer->name = 'pepe';  
-        $payer->email = 'ppepe@asd.com';  
+        $payer->email = 'ppepe@asd.com';
+
         $preference->payer = $payer; 
       
-        // $external_reference = $preference->external_reference;  
-        $preference->save();  
+        $preference->external_reference = '12345';
+        $preference->save();
+
+        /**
+         * HAY QUE HACER UNA NUEVA FUNCION QUE RECIBA EL EL IPN DE MERCADOPAGO, 
+         * PARA ASI, UNA VEZ EL PAGO FUE ACREDITADO
+         * EL IPN HACE UNA PETICION A LA URL QUE TAMBIEN 
+         * HAY QUE CREAR CON EL PAGO QUE FUE HECHO, Y ESTE VA A SER MODIFICADO PARA ASI
+         * APARECE EN MYSQL EL STATUS QUE TIENE  
+         * 
+         * (EN ESTA FUNCION SOLO VAMOS A MANDAR EL INIT_POINT, EL LINK DONDE EL USUARIO VA A PAGAR)
+        */
+
         return response()->json(['url' => $preference->init_point, 'id_payment' => $preference->id]);
     }
 
     public function getPayments()
     {   
-        $mp = new MercadoPago\RestClient;
-        $payments = $mp->get("/v1/payments/search",
-        array(
-			"limit" => 5,
-			"criteria" => "desc",
-            "sort" => "date_last_updated"
-		));
+        $payments = Http::get('https://api.mercadopago.com/v1/payments/search?access_token='
+        .config('services.mercadopago.token')
+        .'&criteria=desc'
+        );
         
-        return response()->json($payments);
+        return $payments;
     }
 }

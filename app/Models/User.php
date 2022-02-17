@@ -38,5 +38,10 @@ class User extends Authenticatable
     {
         return $this->belongsToMany(Movie::class)->withPivot('seconds');
     }
+    
+    public function payments()
+    {
+        return $this->hasMany(Payment::class);
+    }
 
 }
