@@ -1,7 +1,7 @@
 <?php
 
-use App\Http\Controllers\Api\MovieController;
 use App\Http\Controllers\Api\PaymentController;
+use App\Http\Controllers\Movie\MovieDestroyController;
 use App\Http\Controllers\Movie\MovieIndexController;
 use App\Http\Controllers\Movie\MovieShowController;
 use App\Http\Controllers\Movie\MovieStoreController;
@@ -35,7 +35,7 @@ Route::prefix('movie')->group(function () {
         Route::middleware('auth.admin')->group(function () {
             Route::post('/',MovieStoreController::class);
             Route::put('/{movieId}', MovieUpdateController::class);
-            Route::delete('/{movieId}',[MovieController::class,'destroy']); 
+            Route::delete('/{movieId}',MovieDestroyController::class); 
         });
     });
 });
