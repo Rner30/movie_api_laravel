@@ -18,7 +18,7 @@ class UserUpdateController extends Controller
     {
         $token = auth()->user();
         
-        if ($userId != $token) {
+        if ($userId != $token->id) {
             return response()->json([
                 'msg' => 'Solo puedes modificar usuarios teniendo su autenticacion'
             ],404);

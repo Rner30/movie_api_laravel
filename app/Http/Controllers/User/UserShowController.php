@@ -17,8 +17,6 @@ class UserShowController extends Controller
 
     public function __invoke($userId)
     {
-        $user = ($this->userShowService)($userId);
-        
-        return UserResource::make($user) ;
+        return ($this->userShowService)($userId);
     }
 }

@@ -2,7 +2,10 @@
 
 use App\Http\Controllers\Api\MovieController;
 use App\Http\Controllers\Api\PaymentController;
-use App\Http\Controllers\Api\UserController;
+use App\Http\Controllers\Movie\MovieIndexController;
+use App\Http\Controllers\Movie\MovieShowController;
+use App\Http\Controllers\Movie\MovieStoreController;
+use App\Http\Controllers\Movie\MovieUpdateController;
 use App\Http\Controllers\User\UserDestroyController;
 use App\Http\Controllers\User\UserLoginController;
 use App\Http\Controllers\User\UserSaveMoviesController;
@@ -26,12 +29,12 @@ Route::prefix('user')->group(function () {
 
 Route::prefix('movie')->group(function () {
     Route::middleware('auth:sanctum')->group(function () {
-        Route::get('/',[MovieController::class,'index']);
-        Route::get('/{movieId}',[MovieController::class,'show']);
+        Route::get('/', MovieIndexController::class);
+        Route::get('/{movieId}', MovieShowController::class)->name('movie.show');
         
         Route::middleware('auth.admin')->group(function () {
-            Route::post('/',[MovieController::class,'store']);
-            Route::put('/{movieId}',[MovieController::class,'update']);
+            Route::post('/',MovieStoreController::class);
+            Route::put('/{movieId}', MovieUpdateController::class);
             Route::delete('/{movieId}',[MovieController::class,'destroy']); 
         });
     });

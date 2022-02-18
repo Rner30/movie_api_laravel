@@ -3,10 +3,10 @@
 namespace App\Http\Controllers\User;
 
 use App\Http\Controllers\Controller;
+use App\Http\Requests\UserSaveMoviesRequest;
 use App\Http\Services\User\UserSaveMoviesService;
 use App\Models\Movie;
 use App\Models\User;
-use Illuminate\Http\Request;
 
 class UserSaveMoviesController extends Controller
 {
@@ -17,7 +17,7 @@ class UserSaveMoviesController extends Controller
         $this->userSaveMoviesService = $userSaveMoviesService;
     }
 
-    public function __invoke(Request $request)
+    public function __invoke(UserSaveMoviesRequest $request)
     {
         $token = auth()->user();
 
