@@ -54,7 +54,7 @@ class PaymentController extends Controller
          * (EN ESTA FUNCION SOLO VAMOS A MANDAR EL INIT_POINT, EL LINK DONDE EL USUARIO VA A PAGAR)
         */
 
-        return response()->json(['url' => $preference->init_point, 'id_payment' => $preference->id]);
+        return response()->json(['url' => $preference->init_point]);
     }
 
     public function getPayments()

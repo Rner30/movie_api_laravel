@@ -17,16 +17,14 @@ class UserSaveMoviesController extends Controller
         $this->userSaveMoviesService = $userSaveMoviesService;
     }
 
-    public function __invoke(UserSaveMoviesRequest $request)
+    public function __invoke(UserSaveMoviesRequest $request, Movie $movie)
     {
         $token = auth()->user();
 
         $seconds = $request->seconds;
 
-        $user = User::query()->with('movies')->find($token->id)->first();
+        $user = User::getUserById($token->id);
 
-        $movie = Movie::query()->find($request->movie);
-        
         return ($this->userSaveMoviesService)($user,$movie,$seconds);
     }
 }

@@ -21,4 +21,10 @@ class Movie extends Model
     {
         return $this->belongsToMany(User::class)->withPivot('seconds');
     }
+
+    public static function getMovieById($id)
+    {
+        $movie = Movie::query()->findOrFail($id);
+        return $movie;
+    }
 }

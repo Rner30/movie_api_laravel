@@ -16,15 +16,10 @@ class MovieUpdateController extends Controller
         $this->movieUpdateService = $movieUpdateService;
     }
 
-    public function __invoke(Request $request, $movie)
+    public function __invoke(Request $request, Movie $movie)
     {
-        $findMovie = Movie::query()->find($movie);
-
-        if (!isset($findMovie)) {
-            return response()->json([
-                'msg' => 'Pelicula no existente con ese id'
-            ],404);
-        }
-        return ($this->movieUpdateService)($request,$findMovie);
-    }
+        $movie->update($request->all());
+        
+        return response()->json($movie);
+    }   
 }

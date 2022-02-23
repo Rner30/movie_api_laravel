@@ -24,8 +24,7 @@ class UserSaveMoviesRequest extends FormRequest
     public function rules()
     {
         return [
-            'seconds' => 'required|integer',
-            'movie' => 'required|exists:movies,id'
+            'seconds' => 'required|integer'
         ];
     }
 }

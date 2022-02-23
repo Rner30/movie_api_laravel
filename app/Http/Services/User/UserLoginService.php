@@ -10,7 +10,7 @@ final class UserLoginService {
 
     public function __invoke(LoginUserRequest $request)
     {
-        $user = User::query()->with('movies')->where('email','=',$request->email)->first();
+        $user = User::getUserByEmail($request->email);
 
         $passwordVerify = Hash::check($request->password,$user->password);
 

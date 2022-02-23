@@ -14,13 +14,9 @@ class MovieDestroyController extends Controller
         $this->movieDestroyService  = $MovieDestroyService ;
     }
 
-    public function __invoke($movie)
+    public function __invoke(Movie $movie)
     {
-        $deleteMovie = Movie::query()->find($movie);
-        
-        if (!isset($deleteMovie)) {
-            return response()->json(['msg'=>'La pelicula no existe'],404);
-        }
-        return ($this->movieDestroyService)($deleteMovie);
+        $movie->delete();
+        return "Pelicula eliminada";
     }
 }

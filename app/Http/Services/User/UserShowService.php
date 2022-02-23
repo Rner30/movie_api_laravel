@@ -7,16 +7,9 @@ use App\Models\User;
 
 final class UserShowService{
     
-    public function __invoke($userId)
+    public function __invoke($user)
     {
-        $userExists = User::query()->with('movies')->find($userId);
-        
-        if (!isset($userExists)) {
-            return response()->json([
-                'msg' => "Usuario no encontrado"
-            ],404);
-        }
-
-        return UserResource::make($userExists);
+        $findUser = User::getUserById($user);
+        return $findUser;
     }
 }

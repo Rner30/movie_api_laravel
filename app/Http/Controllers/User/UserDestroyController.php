@@ -4,6 +4,7 @@ namespace App\Http\Controllers\User;
 
 use App\Http\Controllers\Controller;
 use App\Http\Services\User\UserDestroyService;
+use App\Models\User;
 
 class UserDestroyController extends Controller
 {   
@@ -13,11 +14,9 @@ class UserDestroyController extends Controller
         $this->userDestroyService = $userDestroyService;
     }
     
-    public function __invoke($id)
+    public function __invoke(User $user)
     {
-        ($this->userDestroyService)($id);
-        return response()->json([
-            'msg' => 'Usuario eliminado'
-        ]);
+        $user->delete();
+        return response()->status(200);
     }
 }

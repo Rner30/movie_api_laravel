@@ -15,27 +15,27 @@ use App\Http\Controllers\User\UserUpdateController;
 use Illuminate\Support\Facades\Route;
 
 
-Route::prefix('user')->group(function () {
-    Route::post('/', UserStoreController::class)->name('user.store'); 
-    Route::post('/login', UserLoginController::class)->name('user.login'); 
+Route::prefix('users')->group(function () {
+    Route::post('/', UserStoreController::class)->name('user.store');
+    Route::post('/login', UserLoginController::class)->name('user.login');
     Route::get('/{user}', UserShowController::class)->name('user.show');
-    Route::delete('/{user}', UserDestroyController::class)->name('user.destroy');   
+    Route::delete('/{user}', UserDestroyController::class)->name('user.destroy');
     
     Route::middleware('auth:sanctum')->group(function () {
-        Route::post('/save-movies', UserSaveMoviesController::class)->name('user.saveMovies'); 
+        Route::post('/save-movies/movies/{movie}', UserSaveMoviesController::class)->name('user.saveMovies');
         Route::put('/{user}', UserUpdateController::class)->name('user.update');
     });
 });
 
-Route::prefix('movie')->group(function () {
+Route::prefix('movies')->group(function () {
     Route::middleware('auth:sanctum')->group(function () {
         Route::get('/', MovieIndexController::class);
-        Route::get('/{movieId}', MovieShowController::class)->name('movie.show');
+        Route::get('/{movie}', MovieShowController::class)->name('movie.show');
         
         Route::middleware('auth.admin')->group(function () {
             Route::post('/',MovieStoreController::class);
-            Route::put('/{movieId}', MovieUpdateController::class);
-            Route::delete('/{movieId}',MovieDestroyController::class); 
+            Route::put('/{movie}', MovieUpdateController::class);
+            Route::delete('/{movie}',MovieDestroyController::class);
         });
     });
 });

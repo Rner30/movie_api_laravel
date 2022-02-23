@@ -9,7 +9,7 @@ use Illuminate\Http\Request;
 final class UserUpdateService{
     public function __invoke(Request $request, $userId)
     {
-        $findUser = User::query()->find($userId);
+        $findUser = User::getUserById($userId);
         $findUser->update($request->all());
         return UserResource::make($findUser);
     }

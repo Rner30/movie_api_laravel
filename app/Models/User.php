@@ -44,4 +44,16 @@ class User extends Authenticatable
         return $this->hasMany(Payment::class);
     }
 
+    public static function getUserByEmail($email)
+    {
+        $user = User::query()->where('email', $email)->first();
+        return $user;
+    }
+    
+    public static function getUserById($id)
+    {
+        $user = User::query()->with('movies')->findOrFail($id)->first();
+        return $user;
+    }
+
 }
